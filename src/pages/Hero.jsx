@@ -20,7 +20,7 @@ const submithandler = (e)=>{
   e.preventDefault()
   
   if (input.trim() === ""){ toast.error("Please enter a Todo!")
-    return;
+    return
   } 
 
   setinput("")
@@ -38,7 +38,7 @@ let tasks = <h1> No Tasks Available</h1>
 if(main.length>0  ){
 tasks = main.map((t,i)=>{
     return(
-      <div className=' border-2 border-amber-50 mt-4' >
+      <div className='bg-gray-200 border-2 border-amber-50 m-4 text-black items-center' >
         {/* <h1 className=' text-2xl font-medium mt-10'>Your Todos:</h1> */}
         <li key={i} className='p-3 flex items-center justify-between' >
         {t.input}
@@ -52,14 +52,14 @@ tasks = main.map((t,i)=>{
 }
 
   return (
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center '>
       
       <div className="flex flex-col p-12 mt-20 justify-center items-center">
         <h1 className='text-6xl font-medium '>Create Your Todos</h1>
         <div >
           <form  onSubmit={submithandler} >
 
-          <input className='bg-amber-50 relative text-gray-500 w-3xl mt-5 p-3'
+          <input className='bg-amber-50 relative text-black w-3xl mt-5 p-3'
            type="text" 
            placeholder='Enter your Todos' 
            value={input}
@@ -75,7 +75,7 @@ tasks = main.map((t,i)=>{
         <div className=' bg-slate-500 w-4xl m-10 flex flex-col '>
 
             <ul>
-              <div className='text-center p-4'>
+              <div className='text-center p-4 '>
             {tasks}
             </div>
           </ul>
