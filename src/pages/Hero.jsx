@@ -1,64 +1,83 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { MdDelete } from "react-icons/md";
+import { ToastContainer, toast } from 'react-toastify';
 const Hero = () => {
+  
+  const [input, setinput] = useState("")
+  const [main, setmain] = useState(() => {
+    const savedTodos = localStorage.getItem("todos");
 
-  const [todo, settodo] = useState("")    
-  const [maintask, setMaintask] = useState([])
+    return savedTodos ? JSON.parse(savedTodos) : [];
+  });
 
-const deletehandler = (i)=>{
-    let copytask  = [...maintask]
-    copytask.splice(i)
-      setMaintask(copytask)
-    
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(main));
+  }, [main])
+  
+  
+const submithandler = (e)=>{
+  e.preventDefault()
+  
+  if (input.trim() === ""){ toast.error("Please enter a Todo!")
+    return;
+  } 
+
+  setinput("")
+  setmain([...main,{input}])
 }
 
-  let rendertask = <h1> No Task Available</h1>
-  
- if(maintask.length>0){
-   rendertask = maintask.map((t,i) =>{
+const deletehandler = (i)=>{
+  let deleteii = [...main]
+  deleteii.splice(i,1)
+  setmain(deleteii)
+}
+
+let tasks = <h1> No Tasks Available</h1>
+
+if(main.length>0  ){
+tasks = main.map((t,i)=>{
     return(
-      <li key={i} className='flex justify-between items-center'>
-      <div>
-        <h5>{t.todo}</h5>
+      <div className=' border-2 border-amber-50 mt-4' >
+        {/* <h1 className=' text-2xl font-medium mt-10'>Your Todos:</h1> */}
+        <li key={i} className='p-3 flex items-center justify-between' >
+        {t.input}
+         <MdDelete onClick={()=>{deletehandler(i)}}/>
+        </li>
+
       </div>
-      <button onClick={()=>{
-        deletehandler(i)
-      }}>delete</button>
-      </li>
     )
-  })
- }
+})
 
-
- const onsubmit = (e)=>{
-    e.preventDefault()
-    setMaintask([...maintask,{todo}])
-    settodo("")
-    console.log(maintask)
- }
+}
 
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center p-12">
-        <h1 className='text-5xl font-medium '>Create Your Todos</h1>
+    <div className='flex justify-center items-center'>
+      
+      <div className="flex flex-col p-12 mt-20 justify-center items-center">
+        <h1 className='text-6xl font-medium '>Create Your Todos</h1>
         <div >
-          <form onSubmit={onsubmit}>
+          <form  onSubmit={submithandler} >
+
           <input className='bg-amber-50 relative text-gray-500 w-3xl mt-5 p-3'
            type="text" 
            placeholder='Enter your Todos' 
-           value={todo} 
-           onChange={(e) => settodo(e.target.value)}
+           value={input}
+           onChange={(e)=> setinput(e.target.value)}
+           
             />
 
           <button className='p-3 bg-blue-900 hover:cursor-pointer'>ADD</button>
           </form>
         </div>
+         
 
-        <div className=' bg-blue-300 w-4xl flex flex-col mt-5'>
-          <h1 className='text-2xl p-4'>Your Todos</h1>
+        <div className=' bg-slate-500 w-4xl m-10 flex flex-col '>
 
             <ul>
-          {rendertask}
+              <div className='text-center p-4'>
+            {tasks}
+            </div>
           </ul>
           <div>
           
@@ -67,6 +86,7 @@ const deletehandler = (i)=>{
         </div>
       </div>
 
+      <ToastContainer />
     </div>
   )
 }
